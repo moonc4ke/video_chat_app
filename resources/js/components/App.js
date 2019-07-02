@@ -52,7 +52,6 @@ export default class App extends Component {
     }
 
     setupPusher() {
-        Pusher.logToConsole = true;
         this.pusher = new Pusher(APP_KEY, {
             authEndpoint: '/pusher/auth',
             cluster: 'eu',
@@ -125,6 +124,12 @@ export default class App extends Component {
     render() {
         return (
             <div className="App">
+                <div className="user-id">{[1, 2, 3, 4].map((userId) => {
+                    return this.user.id === userId ?
+                        <div key={userId}>Your Call ID: {userId}</div> : null;
+                })}
+                </div>
+
                 <div className="buttons">{[1, 2, 3, 4].map((userId) => {
                     return this.user.id !== userId ?
                         <button className="btn btn-info" key={userId} onClick={() => this.callTo(userId)}>Call {userId}</button> : null;

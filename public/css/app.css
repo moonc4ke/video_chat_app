@@ -11100,6 +11100,12 @@ a.text-dark:focus {
   }
 }
 
+.user-id {
+  margin: 0 0 8px 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
 .video-container {
   width: 500px;
   height: 380px;
@@ -11111,6 +11117,7 @@ a.text-dark:focus {
 
 .video-container .my-video {
   width: 130px;
+  max-height: 100px;
   position: absolute;
   left: 10px;
   bottom: 10px;

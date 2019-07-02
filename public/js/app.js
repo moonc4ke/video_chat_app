@@ -78403,7 +78403,6 @@ function (_Component) {
     value: function setupPusher() {
       var _this3 = this;
 
-      pusher_js__WEBPACK_IMPORTED_MODULE_3___default.a.logToConsole = true;
       this.pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_3___default.a(APP_KEY, {
         authEndpoint: '/pusher/auth',
         cluster: 'eu',
@@ -78480,6 +78479,12 @@ function (_Component) {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "App"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "user-id"
+      }, [1, 2, 3, 4].map(function (userId) {
+        return _this5.user.id === userId ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: userId
+        }, "Your Call ID: ", userId) : null;
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "buttons"
       }, [1, 2, 3, 4].map(function (userId) {
         return _this5.user.id !== userId ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
