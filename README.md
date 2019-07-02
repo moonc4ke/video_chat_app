@@ -1,5 +1,5 @@
 # Video Chat App
-## Frameworks: Reach, Laravel
+## Frameworks: React, Laravel
 ## With Pusher JS and Simple-Peer
 ### How to set up this app:
 1. Rename .env.example to .env and add correct database credentials
