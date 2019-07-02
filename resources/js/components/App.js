@@ -127,7 +127,7 @@ export default class App extends Component {
             <div className="App">
                 <div className="buttons">{[1, 2, 3, 4].map((userId) => {
                     return this.user.id !== userId ?
-                        <button key={userId} onClick={() => this.callTo(userId)}>Call {userId}</button> : null;
+                        <button className="btn btn-info" key={userId} onClick={() => this.callTo(userId)}>Call {userId}</button> : null;
                 })}
                 </div>
 

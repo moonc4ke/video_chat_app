@@ -78483,6 +78483,7 @@ function (_Component) {
         className: "buttons"
       }, [1, 2, 3, 4].map(function (userId) {
         return _this5.user.id !== userId ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn btn-info",
           key: userId,
           onClick: function onClick() {
             return _this5.callTo(userId);
