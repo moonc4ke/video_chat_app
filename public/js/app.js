@@ -78350,16 +78350,17 @@ var App =
 function (_Component) {
   _inherits(App, _Component);
 
-  function App() {
+  function App(props) {
     var _this;
 
     _classCallCheck(this, App);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this, props));
     _this.state = {
       hasMedia: false,
       otherUserId: null,
-      users: []
+      users: [],
+      seconds: 0
     };
     _this.user = window.user;
     _this.user.stream = null;
@@ -78368,6 +78369,7 @@ function (_Component) {
 
     _this.setupPusher();
 
+    _this.getUsersApi = _this.getUsersApi.bind(_assertThisInitialized(_this));
     _this.callTo = _this.callTo.bind(_assertThisInitialized(_this));
     _this.setupPusher = _this.setupPusher.bind(_assertThisInitialized(_this));
     _this.startPeer = _this.startPeer.bind(_assertThisInitialized(_this));
@@ -78401,8 +78403,15 @@ function (_Component) {
 
         _this2.user.stream = stream;
       });
+      this.getUsersApi();
+    }
+  }, {
+    key: "getUsersApi",
+    value: function getUsersApi() {
+      var _this3 = this;
+
       axios__WEBPACK_IMPORTED_MODULE_5___default.a.get('api/user').then(function (response) {
-        _this2.setState({
+        _this3.setState({
           users: response.data
         });
       })["catch"](function (errors) {
@@ -78412,7 +78421,7 @@ function (_Component) {
   }, {
     key: "setupPusher",
     value: function setupPusher() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.pusher = new pusher_js__WEBPACK_IMPORTED_MODULE_3___default.a(APP_KEY, {
         authEndpoint: '/pusher/auth',
@@ -78426,14 +78435,14 @@ function (_Component) {
       });
       this.channel = this.pusher.subscribe('presence-video-channel');
       this.channel.bind("client-signal-".concat(this.user.id), function (signal) {
-        var peer = _this3.peers[signal.userId]; // if peer is not already exists, we got an incoming call
+        var peer = _this4.peers[signal.userId]; // if peer is not already exists, we got an incoming call
 
         if (peer === undefined) {
-          _this3.setState({
+          _this4.setState({
             otherUserId: signal.userId
           });
 
-          peer = _this3.startPeer(signal.userId, false);
+          peer = _this4.startPeer(signal.userId, false);
         }
 
         peer.signal(signal.data);
@@ -78442,7 +78451,7 @@ function (_Component) {
   }, {
     key: "startPeer",
     value: function startPeer(userId) {
-      var _this4 = this;
+      var _this5 = this;
 
       var initiator = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
       var peer = new simple_peer__WEBPACK_IMPORTED_MODULE_4___default.a({
@@ -78451,29 +78460,29 @@ function (_Component) {
         trickle: false
       });
       peer.on('signal', function (data) {
-        _this4.channel.trigger("client-signal-".concat(userId), {
+        _this5.channel.trigger("client-signal-".concat(userId), {
           type: 'signal',
-          userId: _this4.user.id,
+          userId: _this5.user.id,
           data: data
         });
       });
       peer.on('stream', function (stream) {
         try {
-          _this4.userVideo.srcObject = stream;
+          _this5.userVideo.srcObject = stream;
         } catch (e) {
-          _this4.userVideo.src = URL.createObjectURL(stream);
+          _this5.userVideo.src = URL.createObjectURL(stream);
         }
 
-        _this4.userVideo.play();
+        _this5.userVideo.play();
       });
       peer.on('close', function () {
-        var peer = _this4.peers[userId];
+        var peer = _this5.peers[userId];
 
         if (peer !== undefined) {
           peer.destroy();
         }
 
-        _this4.peers[userId] = undefined;
+        _this5.peers[userId] = undefined;
       });
       return peer;
     }
@@ -78481,36 +78490,73 @@ function (_Component) {
     key: "callTo",
     value: function callTo(userId) {
       this.peers[userId] = this.startPeer(userId);
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.put('api/user/' + this.user.id, {
+        is_online: 0
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.put('api/user/' + userId, {
+        is_online: 0
+      }).then(function (response) {
+        console.log(response);
+      })["catch"](function (errors) {
+        console.log(errors);
+      });
+    }
+  }, {
+    key: "tick",
+    value: function tick() {
+      this.setState(function (prevState) {
+        return {
+          seconds: prevState.seconds + 1
+        };
+      });
+    }
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this6 = this;
+
+      this.interval = setInterval(function () {
+        return _this6.getUsersApi();
+      }, 10000);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      clearInterval(this.interval);
     }
   }, {
     key: "render",
     value: function render() {
-      var _this5 = this;
+      var _this7 = this;
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "App"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "user-id"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Your user name: ", this.user.name)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Your username: ", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("b", null, this.user.name))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "video-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
         className: "my-video",
         ref: function ref(_ref) {
-          _this5.myVideo = _ref;
+          _this7.myVideo = _ref;
         }
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
         className: "user-video",
         ref: function ref(_ref2) {
-          _this5.userVideo = _ref2;
+          _this7.userVideo = _ref2;
         }
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "buttons"
       }, this.state.users.map(function (user) {
-        return _this5.user.id !== user.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        return _this7.user.id !== user.id && user.is_online === 1 ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn btn-info",
           key: user.id,
           onClick: function onClick() {
-            return _this5.callTo(user.id);
+            return _this7.callTo(user.id);
           }
         }, "Call ", user.name) : null;
       })));

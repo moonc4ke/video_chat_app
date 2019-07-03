@@ -8,13 +8,14 @@ import axios from 'axios';
 const APP_KEY = '0a191ea00d5bf967aaa0';
 
 export default class App extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             hasMedia: false,
             otherUserId: null,
-            users: []
+            users: [],
+            seconds: 0
         };
 
         this.user = window.user;
@@ -24,6 +25,7 @@ export default class App extends Component {
         this.mediaHandler = new MediaHandler();
         this.setupPusher();
 
+        this.getUsersApi = this.getUsersApi.bind(this);
         this.callTo = this.callTo.bind(this);
         this.setupPusher = this.setupPusher.bind(this);
         this.startPeer = this.startPeer.bind(this);
@@ -50,6 +52,10 @@ export default class App extends Component {
                 this.user.stream = stream;
             });
 
+        this.getUsersApi();
+    }
+
+    getUsersApi() {
         axios.get('api/user').then(response => {
             this.setState({
                 users: response.data
@@ -127,13 +133,39 @@ export default class App extends Component {
 
     callTo(userId) {
         this.peers[userId] = this.startPeer(userId);
+
+        axios.put('api/user/' + this.user.id, {is_online: 0}).then(response => {
+            console.log(response)
+        }).catch(errors => {
+            console.log(errors);
+        });
+
+        axios.put('api/user/' + userId, {is_online: 0}).then(response => {
+            console.log(response)
+        }).catch(errors => {
+            console.log(errors);
+        });
+    }
+
+    tick() {
+        this.setState(prevState => ({
+            seconds: prevState.seconds + 1
+        }));
+    }
+
+    componentDidMount() {
+        this.interval = setInterval(() => this.getUsersApi(), 10000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.interval);
     }
 
     render() {
         return (
             <div className="App">
                 <div className="user-id">
-                    <div>Your user name: {this.user.name}</div>
+                    <div>Your username: <b>{this.user.name}</b></div>
                 </div>
 
                 <div className="video-container">
@@ -146,7 +178,7 @@ export default class App extends Component {
                 </div>
 
                 <div className="buttons">{this.state.users.map(user => {
-                    return this.user.id !== user.id ?
+                    return this.user.id !== user.id && user.is_online === 1 ?
                         <button className="btn btn-info" key={user.id}
                                 onClick={() => this.callTo(user.id)}>Call {user.name}</button> : null;
                 })}

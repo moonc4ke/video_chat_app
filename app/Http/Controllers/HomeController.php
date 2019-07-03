@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Pusher\Pusher;
 
@@ -24,7 +25,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $users = User::all();
+
+        return view('home', ['users' => $users]);
     }
 
     public function authenticate(Request $request)
@@ -34,7 +37,6 @@ class HomeController extends Controller
 
         $pusher = new Pusher('0a191ea00d5bf967aaa0', 'cd91e57efa52a9f08dca', '815664', [
             'cluster' => 'eu',
-//            'useTLS' => true
         ]);
 
         $presence_data = ['name' => auth()->user()->name];
