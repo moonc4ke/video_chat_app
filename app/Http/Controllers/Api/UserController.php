@@ -87,7 +87,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return response("User id: $id");
+        return response("User $user->name successfully started video chat");
     }
 
     /**
