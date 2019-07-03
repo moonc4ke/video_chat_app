@@ -11120,7 +11120,7 @@ a.text-dark:focus {
 }
 
 .video-container .my-video {
-  width: 130px;
+  max-width: 130px;
   max-height: 100px;
   position: absolute;
   left: 10px;
