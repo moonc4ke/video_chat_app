@@ -78317,6 +78317,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var pusher_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(pusher_js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var simple_peer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! simple-peer */ "./node_modules/simple-peer/index.js");
 /* harmony import */ var simple_peer__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(simple_peer__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_5__);
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -78340,6 +78342,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+
 var APP_KEY = '0a191ea00d5bf967aaa0';
 
 var App =
@@ -78355,7 +78358,8 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(App).call(this));
     _this.state = {
       hasMedia: false,
-      otherUserId: null
+      otherUserId: null,
+      users: []
     };
     _this.user = window.user;
     _this.user.stream = null;
@@ -78396,6 +78400,13 @@ function (_Component) {
         });
 
         _this2.user.stream = stream;
+      });
+      axios__WEBPACK_IMPORTED_MODULE_5___default.a.get('api/user').then(function (response) {
+        _this2.setState({
+          users: response.data
+        });
+      })["catch"](function (errors) {
+        console.log(errors);
       });
     }
   }, {
@@ -78480,20 +78491,16 @@ function (_Component) {
         className: "App"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "user-id"
-      }, [1, 2, 3, 4].map(function (userId) {
-        return _this5.user.id === userId ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-          key: userId
-        }, "Your Call ID: ", userId) : null;
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Your user name: ", this.user.name)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "buttons"
-      }, [1, 2, 3, 4].map(function (userId) {
-        return _this5.user.id !== userId ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, this.state.users.map(function (user) {
+        return _this5.user.id !== user.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
           className: "btn btn-info",
-          key: userId,
+          key: user.id,
           onClick: function onClick() {
-            return _this5.callTo(userId);
+            return _this5.callTo(user.id);
           }
-        }, "Call ", userId) : null;
+        }, "Call ", user.name) : null;
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "video-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {

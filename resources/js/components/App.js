@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import MediaHandler from '../MediaHandler';
 import Pusher from 'pusher-js';
 import Peer from 'simple-peer';
+import axios from 'axios';
 
 const APP_KEY = '0a191ea00d5bf967aaa0';
 
@@ -12,7 +13,8 @@ export default class App extends Component {
 
         this.state = {
             hasMedia: false,
-            otherUserId: null
+            otherUserId: null,
+            users: []
         };
 
         this.user = window.user;
@@ -48,7 +50,13 @@ export default class App extends Component {
                 this.user.stream = stream;
             });
 
-
+        axios.get('api/user').then(response => {
+            this.setState({
+                users: response.data
+            });
+        }).catch(errors => {
+            console.log(errors);
+        });
     }
 
     setupPusher() {
@@ -124,15 +132,14 @@ export default class App extends Component {
     render() {
         return (
             <div className="App">
-                <div className="user-id">{[1, 2, 3, 4].map((userId) => {
-                    return this.user.id === userId ?
-                        <div key={userId}>Your Call ID: {userId}</div> : null;
-                })}
+                <div className="user-id">
+                    <div>Your user name: {this.user.name}</div>
                 </div>
 
-                <div className="buttons">{[1, 2, 3, 4].map((userId) => {
-                    return this.user.id !== userId ?
-                        <button className="btn btn-info" key={userId} onClick={() => this.callTo(userId)}>Call {userId}</button> : null;
+                <div className="buttons">{this.state.users.map(user => {
+                    return this.user.id !== user.id ?
+                        <button className="btn btn-info" key={user.id}
+                                onClick={() => this.callTo(user.id)}>Call {user.name}</button> : null;
                 })}
                 </div>
 
