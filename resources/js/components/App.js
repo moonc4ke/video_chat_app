@@ -136,13 +136,6 @@ export default class App extends Component {
                     <div>Your user name: {this.user.name}</div>
                 </div>
 
-                <div className="buttons">{this.state.users.map(user => {
-                    return this.user.id !== user.id ?
-                        <button className="btn btn-info" key={user.id}
-                                onClick={() => this.callTo(user.id)}>Call {user.name}</button> : null;
-                })}
-                </div>
-
                 <div className="video-container">
                     <video className="my-video" ref={(ref) => {
                         this.myVideo = ref;
@@ -150,6 +143,13 @@ export default class App extends Component {
                     <video className="user-video" ref={(ref) => {
                         this.userVideo = ref;
                     }}></video>
+                </div>
+
+                <div className="buttons">{this.state.users.map(user => {
+                    return this.user.id !== user.id ?
+                        <button className="btn btn-info" key={user.id}
+                                onClick={() => this.callTo(user.id)}>Call {user.name}</button> : null;
+                })}
                 </div>
             </div>
         );

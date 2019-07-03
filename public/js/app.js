@@ -78492,16 +78492,6 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "user-id"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "Your user name: ", this.user.name)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "buttons"
-      }, this.state.users.map(function (user) {
-        return _this5.user.id !== user.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-          className: "btn btn-info",
-          key: user.id,
-          onClick: function onClick() {
-            return _this5.callTo(user.id);
-          }
-        }, "Call ", user.name) : null;
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "video-container"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("video", {
         className: "my-video",
@@ -78513,6 +78503,16 @@ function (_Component) {
         ref: function ref(_ref2) {
           _this5.userVideo = _ref2;
         }
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "buttons"
+      }, this.state.users.map(function (user) {
+        return _this5.user.id !== user.id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          className: "btn btn-info",
+          key: user.id,
+          onClick: function onClick() {
+            return _this5.callTo(user.id);
+          }
+        }, "Call ", user.name) : null;
       })));
     }
   }]);
